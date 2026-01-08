@@ -68,7 +68,7 @@ Exemplos de diretivas e suas respectivas funções:
 - **v-for:** Utilizada para renderização de listas, iterando sobre um array ou objeto para criar múltiplos elementos HTML.
 - **v-bind:** Permite a ligação dinâmica de atributos HTML (como src, href, class, style) a dados reativos na instância Vue. Possui a abreviação :.
 - **v-on:** Anexa ouvintes de eventos (como click, input, submit) aos elementos DOM, executando métodos definidos no componente. Possui a abreviação @.
-- **v-model:** Cria uma ligação de dados bidirecional em elementos de formulário (<input>, <select>, <textarea>), sincronizando automaticamente o valor do input com o estado da aplicação.
+- **v-model:** Cria uma ligação de dados bidirecional em elementos de formulário (input, select, textarea), sincronizando automaticamente o valor do input com o estado da aplicação.
 - **v-text:** Atualiza o conteúdo de texto do elemento. É semelhante à interpolação {{ ... }}.
 - **v-html:** Renderiza HTML bruto dentro do elemento, o que pode ser útil, mas deve ser usado com cautela para evitar ataques XSS(Cross-Site Scripting, vulnerabilidades em sites que permitem a invasores injetar scripts maliciosos).
 - **v-once:** Renderiza o elemento e seu conteúdo apenas uma vez, e as atualizações de dados subsequentes não afetarão mais esse elemento.
@@ -94,8 +94,8 @@ Algumas diretivas permitem que sejam passados argumentos 	dinâmicos, isto é, a
 \</template\>
 
 ### 	**Modificadores:** 
-
 	Modificador é um sufixo especial, denotado por um ponto (.), adicionado às diretivas (v-on ou v-model) para modificar seu comportamento padrão. Por exemplo:   
+
 \<template\>  
   \<form v-on:submit.prevent="mostrarAlerta"\>...\</form\>  
 \</template\>
@@ -120,3 +120,11 @@ De outra forma, podemos dizer que a reatividade, no VueJS, é a forma de criar v
     - const frutas = ref(['maçã', 'banana']); // array de strings
   - **Usando reactive:**
     Mas, para declarar objetos, o uso do reactive é mais recomendado, pois assim não é necessário acessar a propriedade value.
+
+### **Popriedades Computadas:**
+  As propriedades são funções que são executadas automaticamente sempre que uma de suas dependências é alterada, como uma variável reativa. Elas são são declaradas usando a função **computed** do VueJS. A sua sintaxe é semelhante ao de um método (função):
+  
+  `const variavel = computed(() => {
+  return AlgumaCoisa})`
+  
+  A vantagem das propriedades computadas sobre funções comuns é que elas são atualizadas somente quando algumas de suas depedências é atualizadas, diferente das funções que executam sempre que chamadas, o que pode ocorrer sempre que a tela do usuário for renderizada, por exemplo, supondo que exista uma propriedade computada atrelada ao tamanho de um certo array, se outro certo array sofresse alteração e fosse necessário re-renderizar a tela do usuário, se fosse um metódo comum no lugar da propriedade computada, ela seria chamada novamente, sem precisão, causando um impacto negativo na aplicação. 
