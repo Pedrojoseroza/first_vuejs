@@ -128,3 +128,71 @@ De outra forma, podemos dizer que a reatividade, no VueJS, é a forma de criar v
   return AlgumaCoisa})`
   
   A vantagem das propriedades computadas sobre funções comuns é que elas são atualizadas somente quando algumas de suas depedências é atualizadas, diferente das funções que executam sempre que chamadas, o que pode ocorrer sempre que a tela do usuário for renderizada, por exemplo, supondo que exista uma propriedade computada atrelada ao tamanho de um certo array, se outro certo array sofresse alteração e fosse necessário re-renderizar a tela do usuário, se fosse um metódo comum no lugar da propriedade computada, ela seria chamada novamente, sem precisão, causando um impacto negativo na aplicação. 
+
+  ## Aula 05: Renderização:
+
+  É comum em aplicações web se utilizar de listas para diversas funções, geralmente com os dados retirados de um servidor. Existem vários tipos de listas, mas que sempre estão dispostas de duas formas. Ou em Arrays, em que os dados são indexados por números, indices. Ou em Objetos, em que os elementos são indexados por chaves, palavras-chaves.
+
+  ### Renderização dos elementos de uma lista
+  Para iterar sobre todos os itens de uma lista, como no javascript, utilizamos um loop, mas neste caso, uma diretiva, **v-for**, sendo sua sintaxe semelhante ao um loop for, `v-for="item in lista_De_Itens":key = "index"`. A propriedade key é usada pelo VueJS para identificar cada item da lista e é obrigatória quando usamos a diretiva v-for. Sem a propriedade key, o VueJS não consegue identificar cada item da lista e não consegue atualizar corretamente a lista quando os dados são alterados.
+  É importante ressaltar também que a diretiva pode ser utilizada para renderizar o elemento em qualquer tag HTML adequada, não só em <\li>, mas também em <\p> ou <\div>.
+  ### Renderização de um array de objetos
+  Diferente de um array simples, no array de objetos, podemos escolher outra chave para utilizarmos com key, pode ser indexado por mais de apenas um número. Considere o seguinte array: 
+  ```javascript
+     const items = [
+       { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' },
+    { id: 3, name: 'Item 3' },
+  ];
+  ```
+  Para iterar sobre este array, podemos usar a seguinte diretiva: 
+  ```HTML
+   <ul>
+     <li v-for="item in items" :key="item.id">
+       {{ item.name }}
+    </li>
+  </ul>
+  ```
+  A grande diferença é que não precisamos usar o índice do item como identificador.
+  ### Renderização de objetos 
+  Para renderizar um objeto, de forma, completa, precisamos de dois parâmetros, sendo o valor e a chave para acessar o valor, de forma que podemos renderiza-lo completamente. A diferença é que a :key neste caso, pode ser a propria chave do valor dentro do objeto.
+
+  `v-for="(value, key) in items" :key="key"`
+
+  ### Renderização de objetos com objetos aninhados
+  
+  De forma resumida, podemos ter duas abordagens: 
+  - Especificar a chave do valor a ser acessado dentro do array, de forma a usar a sintaxe `item.object.description`
+  - Iterar novamente, isto é, usar outra diretiva como v-for, para percorrer o objeto dentro do objeto que está no array que está sendo percorrido, como uma boneca Russa.
+
+  ### Adicionando elementos a uma lista
+  Para adicionar elementos ao final de uma lista basta usar a função **push**. Considere o exemplo abaixo: 
+  ```javascript
+  <script setup>
+  import { ref } from 'vue'
+
+  const novaCor = ref('')
+  const listaCores = ref(['branco', 'amarelo', 'preto'])
+  
+  function adicionarCor {
+    listaCores.value.push(novaCor.value)
+    novaCor.value = ''
+  }
+</script>
+<template>
+  <p>
+    Adicione sua cor favorita à lista: 
+  </p>
+  <input type="text" v-model="novaCor">
+  <button @click="adicionarCor">Adicionar</button>
+  <ul>
+    <li v-for="cor in listaCores">{{ cor }}</li>
+  </ul>
+</template>
+```
+
+### Removendo elementos
+  Para remover elementos basta usar a função splice, que recebe dois parâmetros, o índice do elementos a ser retirado e a quantidade de elementos a ser retirado a partir daquele índice, 1,2,3,etc.
+
+### Atualizando elementos
+  Para atualizar um elemento de uma lista, basta atribuir um novo valor ao elemento.
