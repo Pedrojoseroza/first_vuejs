@@ -1,4 +1,12 @@
-# **Anotações básicas sobre o [vue.js](http://vue.js)** 
+# **Anotações básicas sobre o [vue.js](https://vuejs.org/)** 
+
+## Aula 01: 
+
+  Instalação do vue pode ser feita diretamente por linha de comando no diretório desejado: 
+  ```
+  npm create vue@latest
+  ```
+  É recomendado a instalação do [docker](https://docker.com) para instalação do banco de dados também.
 
 ## Aula 02: Base e deploy 
 
@@ -39,13 +47,15 @@ A interpolação de texto, interpola HTML e JS, é a forma mais básica de rende
 ### **HTML puro:** 
 
 O padrão de interpolação de texto não é adequado para renderizar HTML puro. Para isso, o VueJs oferece a diretiva **v-html**. Que, basicamente, faz o HTML ser interpretado como HTML, tipo tags, ao invés de diretamente texto, o que ocorre sem **v-html**.  
-\<script setup\>  
-  const rawHtml \= '\<span style="color: red"\>Este é um texto em vermelho\</span\>';  
-\</script\>  
-\<template\>  
-  \<p\>Usando interpolação de textos: {{rawHtml}}\</p\>  
-  \<p\>Usando v-html: \<span v-html="rawHtml"\>\</span\>\</p\>  
-\</template\>
+```HTML
+<script setup>  
+  const rawHtml = '<span style="color: red">Este é um texto em vermelho</span>';  
+</script>  
+<template>  
+  <p>Usando interpolação de textos: {{rawHtml}}</p>  
+  <p>Usando v-html: <span v-html="rawHtml"></span></p>  
+</template>
+```
 
 Nota: No VueJS, o atributo v-html é chamado de diretiva. Diretivas são atributos especiais que começam com v- e que são usados para modificar o comportamento de um elemento. Diretivas são usadas para renderizar dados, modificar o comportamento de um elemento, ou modificar o comportamento de um elemento de acordo com o estado da aplicação.
 
@@ -81,25 +91,29 @@ Outro exemplo de diretiva que permite parâmetros é a diretiva **v-on**. Essa d
 
 ### **Argumentos dinâmicos:** 
 
-Algumas diretivas permitem que sejam passados argumentos 	dinâmicos, isto é, argumentos que podem estar associados a variáveis, podendo assim variar o atributo HTML passado como variável, por exemplo, em um v-on, variar o tipo de evento associado, a esta condição. Por exemplo:  
-\<script setup\>  
-  const nomeEvento \= 'click';  
+Algumas diretivas permitem que sejam passados argumentos 	dinâmicos, isto é, argumentos que podem estar associados a variáveis, podendo assim variar o atributo HTML passado como variável, por exemplo, em um v-on, variar o tipo de evento associado, a esta condição. Por exemplo:
+``` HTML
+<script setup>  
+  const nomeEvento = 'click';  
   function mostrarAlerta {  
-    alert('Botão clicado\!');  
+    alert('Botão clicado!');  
   };  
-\</script\>  
+</script>  
                    
-\<template\>  
-  \<button v-on:\[nomeEvento\]="mostrarAlerta"\>Clique aqui\</button\>  
-\</template\>
+<template>  
+  <button v-on:[nomeEvento]="mostrarAlerta">Clique aqui</button>  
+</template>
+
+```
 
 ### 	**Modificadores:** 
-	Modificador é um sufixo especial, denotado por um ponto (.), adicionado às diretivas (v-on ou v-model) para modificar seu comportamento padrão. Por exemplo:   
 
-\<template\>  
-  \<form v-on:submit.prevent="mostrarAlerta"\>...\</form\>  
-\</template\>
-
+  Modificador é um sufixo especial, denotado por um ponto (.), adicionado às diretivas (v-on ou v-model) para modificar seu comportamento padrão. Por exemplo:   
+```HTML
+<template>  
+  <form v-on:submit.prevent="mostrarAlerta">...</form>  
+</template>
+```
 Nesse exemplo, a função mostrarAlerta é executada sempre que o formulário for submetido. Contudo, o modificador **.prevent** informa ao Vue para chamar o método event.preventDefault() que dependendo do evento em questão, parará seu comportamento padrão, um exemplo é em formulários, evitando que o formulário seja submetido quando a página é reiniciada.
 
 ## Aula 04: Reatividade: 
@@ -196,3 +210,129 @@ De outra forma, podemos dizer que a reatividade, no VueJS, é a forma de criar v
 
 ### Atualizando elementos
   Para atualizar um elemento de uma lista, basta atribuir um novo valor ao elemento.
+
+  ## Aula 06: Componentes
+  Componentes instâncias reutilizáveis de VueJS que podem ser criadas e utilizadas em qualquer parte da aplicação. Isto é, são como pedaços de códigos de podem ser reutilizado em diversas partes, simplificando assim a escrita e manutenção do código. Eles permitem dividir a tela do usuário em partes menores de forma a facilitar a utilização e evolução da aplicação.
+
+  No VueJS, em geral, usamos o conceito de SFC (Single File Component) para criar componentes. Um SFC é um arquivo que contém o template, a lógica e o estilo de um componente em um único lugar.
+
+  ### Criação do componente
+  Para criar um componente Vue é bastante simples, da mesma forma que criamos um arquivo .HTML, basta decidir o nome do componente e aplicar .vue ao final desse nome. Isto criará um componente do modelo SFC.
+  Lembrando que componentes Vue devem sempre ser criadas dentro da pasta source (src), de preferências em outras pastas organizadas conforme sua utilidade. 
+
+  ### Registro e uso do componente
+  Para usar um outro componente em alguma aplicação, basta importá-la e usa como uma tag no esqueleto HTML,isso pode ser feito por exemplo na aplicação App.vue, padrão do framework, seguindo a sintaxe: 
+  ```HTML
+  <script>
+    import component from "/src/components/component" 
+  </script>
+  <template>
+    <component/>
+  </template>
+  <style>
+  </style>
+  ```
+
+  ### Registro Global de componentes 
+  Note que de acordo com a sintaxe e o exemplo anterior, para usar um componente em uma aplicação, é preciso sempre importá-la, de forma que não podemos usar esse componente globalmente. Para fazer o registro de um componente qualquer, permitindo que ele seja usado de forma global em toda a aplicação, basta usar o seguinte código no arquivo **src/main.js**: 
+  ``` javascript
+  import { createApp } from 'vue';
+  import App from './App.vue';
+  import componente from './components/componente.vue';
+
+  const app = createApp(App);
+  app.component('componente', componente);
+  app.mount('#app');
+  ```
+
+  ### Propriedades dos componentes 
+  Ao criar um componente, é possível passar propriedades para ele. As propriedades são valores que podem ser utilizados pelo componente para alterar seu comportamento ou sua aparência. As propriedades são passadas para o componente como atributos HTML e são acessadas pelo componente como variáveis JavaScript.
+  
+  A adição de propriedades para um componente é feita pelo método: 
+  ``` javascript
+  import {defineProps} from 'vue'
+  defineProps(["prop"])
+   ```
+   O método defineProps recebe um array de strings com os nomes das propriedades que o componente deve receber.
+   
+   #### Outros recursos de propriedades: 
+   É possível definir valores específicos para as propriedades que serão passadas para um componente, podendo limitar erros e maus funcionamentos da aplicação, veja o exemplo: 
+   ``` HTML
+  <script setup>
+  import { defineProps } from 'vue';
+
+  defineProps({
+    prop: {
+      type: String,
+      required: true,
+    },
+    numeroDaApli: {
+      type: Number,
+      default: '0',
+    },
+  })
+  </script>
+   ```
+  Acima estamos definindo  os tipos das duas propriedades que devem ser passadas ao usar o componente, a propriedade "prop" e "numeroDaApli", string e number, respectivamente. Além disso, estamos definindo a propriedade `prop` como obrigatório, pois sempre que o componente for usado deve ter esta propriedade passada obrigatoriamente (`required`), por último, o valor da propriedade `numeroDaApli` tem como valor padrão igual à 0 (`default`).
+
+  #### Tipos Permitidos para as propriedades: 
+  - String: Texto.
+  - Number: Números.
+  - Boolean: Verdadeiro/Falso.
+  - Array: Arrays.
+  - Object: Objetos.
+  - Date: Objetos de data.
+  - Function: Funções (geralmente usado para callbacks).
+  - Symbol: Símbolos.
+  - Error: Objetos de erro
+
+  ### Outras formas de envio de valores para as propriedades
+  É possível passar valores dinâmicamente para propriedades por meio de varíavel, isto é, que podem mudar conforme o necessidade e ação do usuário, isso é possível com o auxilio da diretiva `v-bind`, veja o exemplo:
+  ```HTML
+  <script setup>
+  import component from './components/component.vue';
+
+  const prop = 'Qualquer coisa';
+  const numeroDaApli = 2;
+</script>
+
+<template>
+  <div>
+    <expand-box :prop="prop" :numeroDaApli="numeroDaApli" />
+  </div>
+</template>
+  ```
+
+Além disso, é possível passar um objeto que possua como propriedades internas, os mesmos nomes de que as propriedades do componente, usando também o v-bind.
+
+### Slots 
+A tag `<slot>` é usada para passar conteúdo para aplicação de forma diferente das propriedades de forma que possamos passar conteúdo para o componente através de onde estamos utilizando, todo o conteúdo presente dentro das tags do componente, normalmente usada no `App.vue`, serão exibidas dentro da tag slot, não sendo necessária colocar nada nela na aplicação em que ela consta.
+
+Caso seja necessário, podemos definir um valor padrão para o que está dentro slot, caso não seja passado nenhum valor, o que já está dentro da tag slot seja exibida, podendo ser uma outra tag como um `<p>`.
+
+ Quando temos mais de uma tag slot no componente, podemos nomea-las, de forma à controlar melhor o código a ser exibido, para isso, usamos a tag template quando for exibida, veja o exemplo: 
+
+```HTML
+<script setup>
+  import componente from './src/componentes/componente'
+  </script>
+
+<template>
+  <componente>
+    <template #primeiro_slot>
+      Um nome, qualquer coisa
+      </template>
+      <template #segundo_slot>
+        Um sobrenome, um número por exemplo
+        </template>
+    </componente>
+</template>
+```
+
+Além disso é possível criar slot condicionais, sendo só exibidos quando um certa condição é verdadeira, por exemplo, quando algum conteúdo é passado para eles.
+
+### Eventos
+A manipulação de eventos é uma parte importante da programação de interfaces de usuário. No Vue.js, os componentes filhos podem emitir eventos que são capturados pelos componentes pais. Para isso, é necessário utilizar a diretiva `v-on` no componente pai e o método `$emit` no componente filho. A sintaxe do $emit é: 
+
+`emit('nome-do-evento', dados)`.
+
